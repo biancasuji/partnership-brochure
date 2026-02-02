@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>그린컴퓨터아카데미 파트너십 브로셔</title>
-    <!-- 외부 라이브러리 (React, Tailwind, LucideIcons) -->
+    <!-- 외부 라이브러리 로드 -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -35,16 +35,23 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
         
-        // 아이콘 렌더링 도우미
+        // 아이콘 렌더링 도우미 (루사이드 아이콘이 확실히 뜨게 만듭니다)
         const LucideIcon = ({ name, size = 24, color = "currentColor", className = "" }) => {
-            useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, []);
+            useEffect(() => { 
+                if (window.lucide) {
+                    window.lucide.createIcons(); 
+                }
+            }, [name]);
             return <i data-lucide={name} style={{ width: size, height: size, color: color }} className={className}></i>;
         };
 
         const App = () => {
             const [formData, setFormData] = useState({ companyName: '', managerName: '', contactNumber: '' });
             const [checkedItems, setCheckedItems] = useState({
-                '채용 연계': false, '특강 지원': false, '멘토링 참여': false, '실무 과제 제공': false
+                '채용 연계': false, 
+                '특강 지원': false, 
+                '멘토링 참여': false, 
+                '실무 과제 제공': false
             });
 
             const brandColor = "#007BFF"; 
@@ -53,33 +60,40 @@
             const toggleItem = (id) => setCheckedItems(prev => ({ ...prev, [id]: !prev[id] }));
             const handleInputChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
-            const handleSubmit = () => {
+            // 구글 폼 연동 함수 (수정된 최종 버전)
+            const handleSubmitToGoogleForm = () => {
                 const selected = Object.keys(checkedItems).filter(key => checkedItems[key]);
-                if (!formData.companyName.trim() || !formData.managerName.trim() || !formData.contactNumber.trim()) {
-                    alert("정보를 모두 입력해 주세요! 😊"); return;
-                }
-                if (selected.length === 0) { alert("협력 항목을 선택해 주세요!"); return; }
+                
+                // 유효성 검사
+                if (!formData.companyName.trim()) { alert("회사명을 입력해 주세요! 😊"); return; }
+                if (!formData.managerName.trim()) { alert("담당자 성함을 입력해 주세요! 😊"); return; }
+                if (!formData.contactNumber.trim()) { alert("연락처를 입력해 주세요! 😊"); return; }
+                if (selected.length === 0) { alert("협력하고 싶은 항목을 최소 하나 이상 선택해 주세요!"); return; }
 
+                // 수지 실장님의 구글 폼 실제 주소 및 Entry ID
                 const baseFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfImxgHSF0uafrVjtQ62PBRAK3VVYU_uoHZPZ4ngw9YzM3yXg/viewform";
                 const entries = {
-                    company: "entry.193390590",
-                    manager: "entry.2096329272",
-                    contact: "entry.794792657",
-                    menu: "entry.245785366"
+                    company: "entry.193390590",   // 회사명
+                    manager: "entry.2096329272",  // 담당자 이름
+                    contact: "entry.794792657",   // 담당자 연락처
+                    menu: "entry.245785366"       // 관심 협력 항목
                 };
                 
-                const queryString = `?usp=pp_url&${entries.company}=${encodeURIComponent(formData.companyName)}` +
+                // URL 생성
+                const queryString = `?usp=pp_url` +
+                                    `&${entries.company}=${encodeURIComponent(formData.companyName)}` +
                                     `&${entries.manager}=${encodeURIComponent(formData.managerName)}` +
                                     `&${entries.contact}=${encodeURIComponent(formData.contactNumber)}` +
                                     `&${entries.menu}=${encodeURIComponent(selected.join(', '))}`;
                 
+                // 새 창으로 열기
                 window.open(baseFormUrl + queryString, '_blank');
             };
 
             return (
                 <div className="flex flex-col items-center py-12 px-4 bg-slate-100 min-h-screen">
                     
-                    {/* 브로셔 앞면 */}
+                    {/* PAGE 1: FRONT (브로셔 앞면) */}
                     <div className="w-full max-w-[850px] bg-white shadow-2xl rounded-3xl overflow-hidden mb-16 border border-slate-200">
                         <div className="h-3 w-full" style={{ backgroundColor: brandColor }}></div>
                         <div className="p-10 md:p-16">
@@ -104,8 +118,8 @@
                                 <div className="w-20 h-20 rounded-2xl bg-white flex items-center justify-center shadow-md shrink-0">
                                     <LucideIcon name="building-2" color={brandColor} size={40} />
                                 </div>
-                                <div className="overflow-hidden text-ellipsis">
-                                    <p className="text-slate-900 font-bold text-xl mb-2 tracking-tight">실무와 교육의 간극을 줄이는 진심</p>
+                                <div>
+                                    <p className="text-slate-900 font-bold text-xl mb-2">실무와 교육의 간극을 줄이는 진심</p>
                                     <p className="text-slate-500 text-lg leading-relaxed">
                                         현업과 닮은 과제를 통해 교육 현장에서 미리 검증된 <span className="text-blue-600 font-bold italic">'진짜 일할 줄 아는 동료'</span>를 기릅니다.
                                     </p>
@@ -128,11 +142,12 @@
                         </div>
                     </div>
 
-                    {/* 인터랙티브 회신 */}
+                    {/* PAGE 2: BACK (인터랙티브 회신) */}
                     <div className="w-full max-w-[850px] bg-white shadow-2xl rounded-3xl overflow-hidden border border-slate-200">
                         <div className="p-12 text-center bg-slate-50/80 border-b border-slate-100">
-                            <h2 className="text-4xl font-black text-slate-900 tracking-tight mb-3 uppercase font-black">협력 메뉴 선택</h2>
-                            <p className="text-slate-500 font-bold text-lg italic">부담 없이 <span className="text-blue-600 underline decoration-blue-100 decoration-4 underline-offset-4 font-black italic">딱 1개만</span> 선택하셔도 좋습니다</p>
+                            <div className="inline-block px-4 py-1.5 rounded-full bg-blue-600 text-white text-[11px] font-black mb-4 tracking-widest uppercase font-black">Interactive Selection</div>
+                            <h2 className="text-4xl font-black text-slate-900 tracking-tight mb-3">협력 메뉴 선택</h2>
+                            <p className="text-slate-500 font-bold text-lg italic underline decoration-blue-100 decoration-4 underline-offset-4 font-black">부담 없이 딱 1개만 선택하셔도 좋습니다</p>
                         </div>
 
                         <div className="p-10 md:p-16">
@@ -168,7 +183,7 @@
                                             <input type="text" name="contactNumber" placeholder="연락처" onChange={handleInputChange} className="w-full pl-16 pr-6 py-6 bg-white border-2 border-slate-100 rounded-[1.5rem] font-bold text-xl focus:border-blue-500 outline-none transition-all shadow-sm" />
                                         </div>
                                     </div>
-                                    <button onClick={handleSubmit} className="w-full mt-6 py-7 bg-blue-600 hover:bg-blue-700 text-white font-black text-2xl rounded-[2rem] shadow-2xl flex items-center justify-center gap-4 transition-all active:scale-95 group">
+                                    <button onClick={handleSubmitToGoogleForm} className="w-full mt-6 py-7 bg-blue-600 hover:bg-blue-700 text-white font-black text-2xl rounded-[2rem] shadow-2xl flex items-center justify-center gap-4 transition-all active:scale-95 group">
                                         <LucideIcon name="send" size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /> 
                                         협력 의사 전달하고 상세 안내 받기
                                     </button>
@@ -196,7 +211,7 @@
                             <div className="flex justify-between items-end border-t border-slate-100 pt-10">
                                 <div className="text-left">
                                     <p className="text-slate-900 font-black text-2xl mb-1 tracking-tighter italic leading-none">green_job@nate.com</p>
-                                    <p className="text-slate-400 font-bold text-base font-bold">취업지원실 신수지 실장 / 010-7547-9780</p>
+                                    <p className="text-slate-400 font-bold text-base font-bold font-black">취업지원실 신수지 실장 / 010-7547-9780</p>
                                 </div>
                                 <div className="text-right">
                                     <img src={logoUrl} alt="그린컴퓨터아카데미" className="h-8 opacity-40 grayscale mb-2" />
