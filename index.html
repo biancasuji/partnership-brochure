@@ -1,0 +1,266 @@
+import React, { useState } from 'react';
+import { 
+  CheckCircle2, 
+  Target, 
+  Award, 
+  ArrowRight, 
+  Mail, 
+  Phone, 
+  Clock, 
+  Zap, 
+  Building2, 
+  CheckSquare,
+  Square,
+  Building,
+  User,
+  Smartphone,
+  Send
+} from 'lucide-react';
+
+const App = () => {
+  // 상태 관리: 기업 정보 및 체크박스
+  const [formData, setFormData] = useState({
+    companyName: '',
+    managerName: '',
+    contactNumber: ''
+  });
+  
+  const [checkedItems, setCheckedItems] = useState({
+    '채용 연계': false,
+    '특강 지원': false,
+    '멘토링 참여': false,
+    '실무 과제 제공': false
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const toggleItem = (id) => {
+    setCheckedItems(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  // 구글 폼 연동 함수 (수지님이 보내주신 링크의 ID를 완벽하게 반영했습니다!)
+  const handleSubmitToGoogleForm = () => {
+    const selected = Object.keys(checkedItems).filter(key => checkedItems[key]);
+    
+    // 유효성 검사
+    if (!formData.companyName.trim()) { alert("회사명을 입력해 주세요! 😊"); return; }
+    if (!formData.managerName.trim()) { alert("담당자 성함을 입력해 주세요! 😊"); return; }
+    if (!formData.contactNumber.trim()) { alert("연락처를 입력해 주세요! 😊"); return; }
+    if (selected.length === 0) { alert("협력하고 싶은 항목을 최소 하나 이상 선택해 주세요!"); return; }
+
+    // 수지님의 구글 폼 실제 주소
+    const baseFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfImxgHSF0uafrVjtQ62PBRAK3VVYU_uoHZPZ4ngw9YzM3yXg/viewform";
+    
+    // 수지님 링크에서 추출한 실제 Entry ID들
+    const entries = {
+      company: "entry.193390590",   // 회사명
+      manager: "entry.2096329272",  // 담당자 이름
+      contact: "entry.794792657",   // 담당자 연락처
+      menu: "entry.245785366"       // 관심 있는 협력 메뉴
+    };
+    
+    const queryString = `?usp=pp_url` +
+                        `&${entries.company}=${encodeURIComponent(formData.companyName)}` +
+                        `&${entries.manager}=${encodeURIComponent(formData.managerName)}` +
+                        `&${entries.contact}=${encodeURIComponent(formData.contactNumber)}` +
+                        `&${entries.menu}=${encodeURIComponent(selected.join(', '))}`;
+    
+    // 최종 완성된 주소로 이동
+    window.open(baseFormUrl + queryString, '_blank');
+  };
+
+  const brandColor = "#007BFF"; 
+  const logoUrl = "https://greenart.co.kr/assets/_img/headerNew/new23_headerlogo0.svg?4";
+
+  return (
+    <div className="min-h-screen bg-slate-100 flex flex-col items-center p-4 md:p-10 font-sans text-slate-800">
+      
+      {/* FRONT PAGE (A면: 가치 제안) */}
+      <div className="w-full max-w-[800px] aspect-[1/1.414] bg-white shadow-2xl rounded-sm overflow-hidden flex flex-col mb-16 relative border border-gray-200">
+        <div className="h-2 w-full" style={{ backgroundColor: brandColor }}></div>
+        
+        <div className="p-10 flex justify-between items-center border-b border-slate-50">
+          <img src={logoUrl} alt="그린컴퓨터아카데미" className="h-10 md:h-12 object-contain" />
+          <span className="text-[10px] tracking-[0.2em] text-slate-400 uppercase font-black px-3 py-1 border border-slate-100 rounded-md bg-slate-50">Partnership Proposal</span>
+        </div>
+
+        <div className="px-14 pt-10 pb-10">
+          <h1 className="text-4xl md:text-5xl font-black leading-[1.12] tracking-tight text-slate-900 mb-8">
+            현장형 인재를 만나는<br />
+            <span style={{ color: brandColor }}>가장 확실한 방법,</span> 그린아카데미
+          </h1>
+          <div className="w-20 h-1.5 bg-blue-100 mb-8 rounded-full"></div>
+          <p className="text-xl text-slate-600 font-medium leading-relaxed max-w-2xl">
+            기업이 필요한 실무 역량을 교육과정에 담아,<br />
+            <span className="font-bold text-slate-900 underline decoration-blue-200 decoration-4 underline-offset-8 text-nowrap">바로 투입 가능한 인재를 함께 완성합니다.</span><br />
+            부담 없이 가벼운 협업부터 시작해 보세요.
+          </p>
+        </div>
+
+        <div className="mx-14 py-8 border-t border-b border-slate-100 flex gap-8">
+          <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center flex-shrink-0 shadow-sm">
+            <Building2 size={28} color={brandColor} />
+          </div>
+          <div className="flex flex-col justify-center">
+            <p className="text-[15px] leading-relaxed text-slate-500 font-medium">
+              <strong className="text-slate-900 font-bold tracking-tight">그린컴퓨터아카데미 강남점은 실무와 교육의 간극을 줄이는 데 집중합니다.</strong>
+            </p>
+            <p className="text-[15px] leading-relaxed text-slate-500 mt-2 font-medium">
+              기업의 생생한 목소리를 교육과정에 녹여내고, 현업과 닮은 과제를 통해 <span className="text-blue-600 font-bold">'진짜 일할 줄 아는 동료'</span>를 기릅니다. 작은 제안 하나가 교육에 반영될 때 현장에 바로 녹아드는 인재가 탄생합니다.
+            </p>
+          </div>
+        </div>
+
+        <div className="px-14 py-12 grid grid-cols-3 gap-6">
+          <div className="bg-slate-50/50 p-6 rounded-3xl text-center border border-slate-100 shadow-sm">
+            <Target size={30} className="text-blue-500 mb-4 mx-auto" />
+            <h3 className="font-black text-slate-900 mb-2 text-xs uppercase tracking-tighter">채용 리스크 감소</h3>
+            <p className="text-[10px] text-slate-500 leading-tight">교육 단계에서 미리<br />역량과 태도를 검증</p>
+          </div>
+          <div className="bg-slate-50/50 p-6 rounded-3xl text-center border border-slate-100 shadow-sm">
+            <Zap size={30} className="text-blue-500 mb-4 mx-auto" />
+            <h3 className="font-black text-slate-900 mb-2 text-xs uppercase tracking-tighter">온보딩 비용 절감</h3>
+            <p className="text-[10px] text-slate-500 leading-tight">실무 과제 기반으로<br />"해본 사람" 즉시 채용</p>
+          </div>
+          <div className="bg-slate-50/50 p-6 rounded-3xl text-center border border-slate-100 shadow-sm">
+            <Award size={30} className="text-blue-500 mb-4 mx-auto" />
+            <h3 className="font-black text-slate-900 mb-2 text-xs uppercase tracking-tighter">채용 브랜딩 강화</h3>
+            <p className="text-[10px] text-slate-500 leading-tight">특강·멘토링 참여를 통한<br />강력한 인재 확보 채널</p>
+          </div>
+        </div>
+
+        <div className="mt-auto mx-14 mb-14 p-7 rounded-3xl flex items-center justify-between shadow-xl" style={{ backgroundColor: brandColor }}>
+          <div className="flex items-center gap-5 text-white">
+            <CheckCircle2 size={26} />
+            <span className="font-black text-xl tracking-tight italic">"가능한 1가지부터" 시작합니다</span>
+          </div>
+        </div>
+      </div>
+
+      {/* BACK PAGE (B면: 인터랙티브 회신) */}
+      <div className="w-full max-w-[800px] aspect-[1/1.414] bg-white shadow-2xl rounded-sm overflow-hidden flex flex-col relative border border-gray-200">
+        <div className="p-10 text-center bg-slate-50/50 border-b border-slate-100">
+          <div className="inline-block px-3 py-1 rounded-full bg-blue-600 text-white text-[10px] font-black mb-3 uppercase tracking-widest shadow-sm">Interactive Selection</div>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">협력 메뉴 선택</h2>
+          <p className="text-slate-500 mt-2 font-bold text-base italic">부담 없이 <span className="text-blue-600 underline decoration-blue-100 decoration-4 underline-offset-4 font-black italic">딱 1개만</span> 선택하셔도 좋습니다</p>
+        </div>
+
+        <div className="px-16 py-8 flex-grow">
+          {/* 체크리스트 */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            {Object.keys(checkedItems).map((key) => (
+              <div 
+                key={key}
+                onClick={() => toggleItem(key)}
+                className={`group p-5 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-4 ${checkedItems[key] ? 'border-blue-500 bg-blue-50 shadow-md translate-y-[-2px]' : 'border-slate-50 bg-slate-50/50 hover:border-blue-200'}`}
+              >
+                <div className="flex-shrink-0">
+                  {checkedItems[key] ? 
+                    <div className="bg-blue-600 rounded-lg p-1.5 shadow-inner"><CheckSquare size={24} color="white" /></div> : 
+                    <div className="bg-white rounded-lg p-1.5 border border-slate-200"><Square size={24} className="text-slate-200" /></div>
+                  }
+                </div>
+                <h4 className={`font-black text-[15px] ${checkedItems[key] ? 'text-blue-600' : 'text-slate-800'}`}>{key}</h4>
+              </div>
+            ))}
+          </div>
+
+          {/* 파트너 정보 입력 */}
+          <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 mb-6 shadow-inner">
+            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+              <Mail size={16} /> Partner Information
+            </h3>
+            
+            <div className="grid grid-cols-1 gap-4">
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-300 group-focus-within:text-blue-500 transition-colors">
+                  <Building size={18} />
+                </div>
+                <input 
+                  type="text" 
+                  name="companyName"
+                  placeholder="회사명" 
+                  value={formData.companyName}
+                  onChange={handleInputChange}
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-slate-100 rounded-2xl font-bold text-base focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all placeholder:text-slate-200 shadow-sm"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-300 group-focus-within:text-blue-500 transition-colors">
+                    <User size={18} />
+                  </div>
+                  <input 
+                    type="text" 
+                    name="managerName"
+                    placeholder="담당자 성함" 
+                    value={formData.managerName}
+                    onChange={handleInputChange}
+                    className="w-full pl-12 pr-5 py-4 bg-white border-2 border-slate-100 rounded-2xl font-bold text-base focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all placeholder:text-slate-200 shadow-sm"
+                  />
+                </div>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-300 group-focus-within:text-blue-500 transition-colors">
+                    <Smartphone size={18} />
+                  </div>
+                  <input 
+                    type="text" 
+                    name="contactNumber"
+                    placeholder="연락처" 
+                    value={formData.contactNumber}
+                    onChange={handleInputChange}
+                    className="w-full pl-12 pr-5 py-4 bg-white border-2 border-slate-100 rounded-2xl font-bold text-base focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all placeholder:text-slate-200 shadow-sm"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <button 
+              onClick={handleSubmitToGoogleForm}
+              className="w-full mt-7 py-5 rounded-[1.25rem] bg-blue-600 hover:bg-blue-700 text-white font-black text-lg shadow-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] group"
+            >
+              <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              협력 의사 전달하고 상세 안내 받기
+            </button>
+          </div>
+        </div>
+
+        {/* 하단 프로세스 바 */}
+        <div className="mx-16 px-10 py-6 rounded-[1.5rem] bg-slate-900 flex justify-between items-center text-white mb-8 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-blue-400 to-sky-300"></div>
+          {[
+            { step: '01', text: '회신(체크)' },
+            { step: '02', text: '15분 미팅' },
+            { step: '03', text: '범위 확정' },
+            { step: '04', text: '운영 시작' }
+          ].map((s, idx) => (
+            <React.Fragment key={idx}>
+              <div className="flex flex-col items-center">
+                <span className="text-[8px] font-black text-blue-500 mb-0.5 tracking-widest leading-none uppercase">STEP {s.step}</span>
+                <span className="text-[12px] font-black tracking-tight">{s.text}</span>
+              </div>
+              {idx < 3 && <ArrowRight size={16} className="text-slate-700" />}
+            </React.Fragment>
+          ))}
+        </div>
+
+        {/* 푸터 */}
+        <div className="px-16 pb-10 flex justify-between items-center border-t border-slate-50 pt-6">
+          <div className="text-left">
+            <p className="text-slate-900 font-black text-base mb-0.5 tracking-tighter italic">green_job@nate.com</p>
+            <p className="text-slate-400 font-bold text-[11px]">취업지원실 신수지 실장 / 010-7547-9780</p>
+          </div>
+          <div className="text-right">
+             <img src={logoUrl} alt="그린컴퓨터아카데미" className="h-5 opacity-30 grayscale object-contain mb-1" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
