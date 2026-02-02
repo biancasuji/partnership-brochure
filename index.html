@@ -26,19 +26,47 @@
     <script type="text/babel">
         const { useState } = React;
         
-        // 아이콘을 SVG로 직접 그려서 절대 깨지지 않게 만듭니다 (어떤 환경에서도 100% 노출)
+        // 아이콘을 SVG로 직접 그려서 절대 깨지지 않게 만듭니다 (Adjacent JSX elements 에러 수정 완료)
         const CustomIcon = ({ name, size = 24, className = "" }) => {
             const icons = {
                 building: <path d="M3 21h18M9 8h1m-1 4h1m-1 4h1m5-12h1m-1 4h1m-1 4h1M3 7l9-4 9 4v14H3V7z"/>,
-                target: <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>,
+                target: (
+                    <React.Fragment>
+                        <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+                    </React.Fragment>
+                ),
                 zap: <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>,
-                award: <circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.11"/>,
-                mail: <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/>,
-                user: <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>,
-                phone: <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18"/>,
-                send: <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>,
+                award: (
+                    <React.Fragment>
+                        <circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.11"/>
+                    </React.Fragment>
+                ),
+                mail: (
+                    <React.Fragment>
+                        <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/>
+                    </React.Fragment>
+                ),
+                user: (
+                    <React.Fragment>
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                    </React.Fragment>
+                ),
+                phone: (
+                    <React.Fragment>
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18"/>
+                    </React.Fragment>
+                ),
+                send: (
+                    <React.Fragment>
+                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </React.Fragment>
+                ),
                 check: <polyline points="20 6 9 17 4 12"/>,
-                arrow: <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                arrow: (
+                    <React.Fragment>
+                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    </React.Fragment>
+                )
             };
             return (
                 <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -146,7 +174,7 @@
                                     <div 
                                         key={key} 
                                         onClick={() => toggleItem(key)}
-                                        className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-5 ${checkedItems[key] ? 'border-blue-500 bg-blue-50 shadow-lg translate-y-[-2px]' : 'border-slate-50 bg-slate-50/50 hover:border-blue-200'}`}
+                                        className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-5 ${checkedItems[key] ? 'border-blue-500 bg-blue-50 shadow-lg translate-y-[-4px]' : 'border-slate-50 bg-slate-50/50 hover:border-blue-200'}`}
                                     >
                                         <div className={`p-2 rounded-xl transition-colors ${checkedItems[key] ? 'bg-blue-600 text-white shadow-inner' : 'bg-white border-2 border-slate-100 text-slate-200'}`}>
                                             <CustomIcon name="check" size={24} />
