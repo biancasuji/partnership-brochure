@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>그린컴퓨터아카데미 기업 맞춤형 파트너십</title>
+    <title>그린컴퓨터아카데미 기업 협약 파트너십</title>
     <!-- 필수 라이브러리 -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -12,6 +12,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
         body, html { margin: 0; padding: 0; width: 100%; background-color: #f1f5f9; font-family: 'Noto Sans KR', sans-serif; scroll-behavior: smooth; }
+        /* 한글 단어 끊김 방지 */
         .break-keep { word-break: keep-all; }
         .logo-text { font-weight: 900; color: #007BFF; font-size: 24px; letter-spacing: -1.5px; }
     </style>
@@ -22,7 +23,7 @@
     <script type="text/babel">
         const { useState } = React;
         
-        // 아이콘 SVG 컴포넌트 (React.Fragment로 묶어 문법 오류 완전 해결)
+        // 아이콘 SVG 컴포넌트
         const SVGIcon = ({ name, size = 24, className = "" }) => {
             const icons = {
                 building: <path d="M3 21h18M9 8h1m-1 4h1m-1 4h1m5-12h1m-1 4h1m-1 4h1M3 7l9-4 9 4v14H3V7z"/>,
@@ -104,17 +105,17 @@
                                 <span className="text-[10px] tracking-[0.2em] text-slate-400 font-black px-3 py-1 border border-slate-100 rounded-md bg-slate-50 uppercase tracking-widest">Exclusive Matching</span>
                             </div>
                             
-                            <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-8 leading-[1.15] tracking-tight break-keep">
-                                귀사의 실무에 최적화된<br />
+                            <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-8 leading-[1.2] tracking-tight break-keep">
+                                실무에 최적화된<br />
                                 <span style={{ color: brandColor }}>'단 한 명'을 길러내는 일,</span><br />
-                                그것이 그린아카데미의 진심입니다
+                                그린아카데미의 진심입니다.
                             </h1>
                             <div className="w-20 h-2 bg-blue-100 mb-10 rounded-full"></div>
                             
                             <p className="text-xl md:text-2xl text-slate-600 font-medium leading-relaxed mb-12 break-keep">
                                 수많은 수료생을 배출하는 것보다 중요한 것은,<br />
-                                <strong className="text-slate-900">귀사의 현업에 즉시 녹아들 수 있는 '적격자'를 매칭하는 것입니다.</strong><br />
-                                우리는 오직 귀사만을 위한 맞춤형 인재 파이프라인을 제안합니다.
+                                현업에 즉시 녹아들 수 있는 <strong className="text-slate-900">'적격자'를 매칭하는 것입니다.</strong><br />
+                                <span className="text-blue-600 font-bold">우리는 오직 귀사 만을 위한 맞춤형 인재 파이프 라인을 제안합니다.</span>
                             </p>
 
                             <div className="bg-blue-50 p-8 rounded-[2.5rem] border border-blue-100 mb-12 flex gap-6 items-center">
@@ -122,14 +123,14 @@
                                     <SVGIcon name="shield" size={32} className="text-blue-600" />
                                 </div>
                                 <div className="break-keep">
-                                    <p className="text-slate-900 font-black text-lg mb-1">귀사의 현장 DNA를 교육에 이식합니다</p>
+                                    <p className="text-slate-900 font-black text-lg mb-1">현장 DNA를 교육에 이식합니다</p>
                                     <p className="text-slate-500 text-[15px] leading-relaxed">우리는 귀사의 기술 요구사항과 기업 문화를 분석하여, 실제 현장 과제를 수행하며 준비된 '동료'를 함께 기릅니다.</p>
                                 </div>
                             </div>
 
                             <div className="mt-12 p-8 rounded-3xl bg-blue-600 text-white flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-all shadow-xl active:scale-95 group"
                                  onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>
-                                <span className="font-black text-2xl tracking-tight mr-4">우리 기업 맞춤형 인재 매칭하기</span>
+                                <span className="font-black text-2xl tracking-tight mr-4">맞춤형 인재 매칭 하기</span>
                                 <SVGIcon name="arrow" size={28} className="group-hover:translate-x-2 transition-transform" />
                             </div>
                         </div>
@@ -145,7 +146,7 @@
                         <div className="p-8 md:p-14">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
                                 {Object.keys(checkedItems).map(key => (
-                                    <div key={key} onClick={() => toggleItem(key)} className={`p-6 rounded-2xl border-2 cursor-pointer transition-all flex items-center gap-5 ${checkedItems[key] ? 'border-blue-500 bg-blue-50 shadow-md translate-y-[-2px]' : 'border-slate-50 bg-slate-50/50 hover:border-blue-200'}`}>
+                                    <div key={key} onClick={() => toggleItem(key)} className={`p-6 rounded-2xl border-2 cursor-pointer transition-all flex items-center gap-5 ${checkedItems[key] ? 'border-blue-500 bg-blue-50 shadow-lg translate-y-[-2px]' : 'border-slate-50 bg-slate-50/50 hover:border-blue-200'}`}>
                                         <div className={`p-2 rounded-xl ${checkedItems[key] ? 'bg-blue-600 text-white' : 'bg-white border-2 border-slate-100 text-slate-200'}`}>
                                             <SVGIcon name="check" size={24} />
                                         </div>
@@ -175,7 +176,7 @@
                                     </div>
                                     <button onClick={handleSubmit} className="w-full mt-6 py-7 bg-blue-600 hover:bg-blue-700 text-white font-black text-2xl rounded-3xl shadow-2xl flex items-center justify-center gap-4 transition-all active:scale-95 group">
                                         <SVGIcon name="send" size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /> 
-                                        맞춤형 인재 매칭 신청하기
+                                        맞춤형 인재 매칭 상담 신청하기
                                     </button>
                                 </div>
                             </div>
