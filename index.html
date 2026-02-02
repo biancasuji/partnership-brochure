@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>그린컴퓨터아카데미 파트너십 브로셔</title>
-    <!-- 필수 라이브러리 로드 (이게 있어야 브라우저에서 바로 작동합니다) -->
+    <!-- 필수 라이브러리 로드 -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -16,7 +16,8 @@
             background-color: #f1f5f9; font-family: 'Noto Sans KR', sans-serif; 
             scroll-behavior: smooth; 
         }
-        /* 이미지 로드 실패 대비 텍스트 로고 스타일 */
+        /* [중요] 한글 단어가 중간에 끊기지 않게 하는 설정 */
+        .break-keep { word-break: keep-all; }
         .logo-text { font-weight: 900; color: #007BFF; font-size: 24px; letter-spacing: -1.5px; }
     </style>
 </head>
@@ -26,7 +27,6 @@
     <script type="text/babel">
         const { useState } = React;
         
-        // 아이콘을 SVG로 직접 그려서 절대 깨지지 않게 만듭니다 (Adjacent JSX elements 에러 수정 완료)
         const CustomIcon = ({ name, size = 24, className = "" }) => {
             const icons = {
                 building: <path d="M3 21h18M9 8h1m-1 4h1m-1 4h1m5-12h1m-1 4h1m-1 4h1M3 7l9-4 9 4v14H3V7z"/>,
@@ -132,13 +132,15 @@
                                 <span className="text-[10px] tracking-[0.2em] text-slate-400 font-black px-3 py-1 border border-slate-100 rounded-md bg-slate-50 uppercase tracking-widest">Partnership</span>
                             </div>
                             
-                            <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-8 leading-[1.15] tracking-tight">
+                            {/* [수정] break-keep 클래스를 넣어 '미'가 떨어지지 않게 했습니다 */}
+                            <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-8 leading-[1.15] tracking-tight break-keep">
                                 현장형 인재를 만나는<br />
-                                <span style={{ color: brandColor }}>가장 확실한 방법,</span>그린아카데미
+                                <span style={{ color: brandColor }}>가장 확실한 방법,</span><br />
+                                그린아카데미
                             </h1>
                             <div className="w-20 h-2 bg-blue-100 mb-10 rounded-full"></div>
                             
-                            <p className="text-xl md:text-2xl text-slate-600 font-medium leading-relaxed mb-12">
+                            <p className="text-xl md:text-2xl text-slate-600 font-medium leading-relaxed mb-12 break-keep">
                                 기업이 필요로 하는 실무 역량을 교육과정에 담아,<br />
                                 <span className="font-bold text-slate-900 underline decoration-blue-200 decoration-8 underline-offset-8">바로 투입 가능한 인재를 함께 완성합니다.</span>
                             </p>
@@ -174,7 +176,7 @@
                                     <div 
                                         key={key} 
                                         onClick={() => toggleItem(key)}
-                                        className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-5 ${checkedItems[key] ? 'border-blue-500 bg-blue-50 shadow-lg translate-y-[-4px]' : 'border-slate-50 bg-slate-50/50 hover:border-blue-200'}`}
+                                        className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-5 ${checkedItems[key] ? 'border-blue-500 bg-blue-50 shadow-lg translate-y-[-2px]' : 'border-slate-50 bg-slate-50/50 hover:border-blue-200'}`}
                                     >
                                         <div className={`p-2 rounded-xl transition-colors ${checkedItems[key] ? 'bg-blue-600 text-white shadow-inner' : 'bg-white border-2 border-slate-100 text-slate-200'}`}>
                                             <CustomIcon name="check" size={24} />
