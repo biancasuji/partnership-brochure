@@ -12,7 +12,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
         body { font-family: 'Noto Sans KR', sans-serif; background-color: #f1f5f9; margin: 0; padding: 0; }
-        input::placeholder { color: #cbd5e1; }
+        input::placeholder, textarea::placeholder { color: #cbd5e1; }
         .break-keep { word-break: keep-all; }
         .custom-shadow { box-shadow: 0 20px 50px rgba(0, 123, 255, 0.1); }
         .message-box { transition: all 0.3s ease; }
@@ -31,12 +31,13 @@
         };
 
         const App = () => {
-            const [formData, setFormData] = useState({ companyName: '', managerName: '', contactNumber: '' });
+            const [formData, setFormData] = useState({ companyName: '', managerName: '', contactNumber: '', extraMessage: '' });
             const [checkedItems, setCheckedItems] = useState({
                 '인재 채용 (구인 의뢰)': false, 
                 '실무 특강 지원': false, 
                 '현직자 멘토링 참여': false, 
-                '프로젝트 과제 제공': false
+                '프로젝트 과제 제공': false,
+                '상세 상담 및 문의': false
             });
             const [message, setMessage] = useState(null);
 
@@ -56,11 +57,18 @@
                 if (!formData.companyName.trim() || !formData.managerName.trim() || !formData.contactNumber.trim()) {
                     showMsg("정보를 모두 입력해 주세요! 😊"); return;
                 }
-                if (selected.length === 0) { showMsg("협력 가능한 항목을 선택해 주세요!"); return; }
+                if (selected.length === 0) { showMsg("항목을 선택해 주세요!"); return; }
 
                 const baseFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfImxgHSF0uafrVjtQ62PBRAK3VVYU_uoHZPZ4ngw9YzM3yXg/viewform";
-                const entries = { company: "entry.193390590", manager: "entry.2096329272", contact: "entry.794792657", menu: "entry.245785366" };
-                const queryString = `?usp=pp_url&${entries.company}=${encodeURIComponent(formData.companyName)}&${entries.manager}=${encodeURIComponent(formData.managerName)}&${entries.contact}=${encodeURIComponent(formData.contactNumber)}&${entries.menu}=${encodeURIComponent(selected.join(', '))}`;
+                const entries = { 
+                    company: "entry.193390590", 
+                    manager: "entry.2096329272", 
+                    contact: "entry.794792657", 
+                    menu: "entry.245785366",
+                    extra: "entry.1234567890" // 실장님! 구글 폼의 '기타 문의' entry ID로 교체 필요
+                };
+                
+                const queryString = `?usp=pp_url&${entries.company}=${encodeURIComponent(formData.companyName)}&${entries.manager}=${encodeURIComponent(formData.managerName)}&${entries.contact}=${encodeURIComponent(formData.contactNumber)}&${entries.menu}=${encodeURIComponent(selected.join(', '))}&${entries.extra}=${encodeURIComponent(formData.extraMessage)}`;
                 window.open(baseFormUrl + queryString, '_blank');
             };
 
@@ -68,13 +76,13 @@
                 <div className="flex flex-col items-center py-12 px-4 bg-slate-50 min-h-screen relative">
                     {/* 메시지 팝업 */}
                     {message && (
-                        <div className="fixed top-8 z-50 bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl font-bold message-box animate-bounce">
+                        <div className="fixed top-8 z-50 bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl font-bold message-box animate-bounce font-black">
                             {message}
                         </div>
                     )}
 
                     {/* PAGE 1: FRONT */}
-                    <div className="w-full max-w-[850px] bg-white custom-shadow rounded-[2.5rem] overflow-hidden mb-16 border border-slate-100">
+                    <div className="w-full max-w-[850px] bg-white custom-shadow rounded-[2.5rem] overflow-hidden mb-16 border border-slate-100 font-black">
                         <div className="h-3 w-full" style={{ backgroundColor: brandColor }}></div>
                         <div className="p-10 md:p-14">
                             <div className="flex justify-between items-center mb-12">
@@ -82,14 +90,13 @@
                                 <span className="text-[10px] tracking-[0.2em] text-slate-400 uppercase font-black px-3 py-1 border border-slate-100 rounded-md bg-slate-50">Professional Education</span>
                             </div>
                             
-                            <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-8 leading-[1.2] tracking-tight break-keep font-black">
+                            <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-8 leading-[1.2] tracking-tight break-keep">
                                 실무에 최적화된<br />
                                 <span style={{ color: brandColor }}>'단 한 명'을 길러내는 일,</span><br />
                                 그린아카데미의 진심입니다.
                             </h1>
                             <div className="w-20 h-2 bg-blue-100 mb-10 rounded-full"></div>
                             
-                            {/* [수정] 요청하신 진정성 있는 문구로 교체 */}
                             <p className="text-xl md:text-2xl text-slate-600 font-medium leading-relaxed mb-12 break-keep font-black">
                                 그린아카데미에게 중요한 것은 수백 명의 수료생을 배출하는 것보다,<br />
                                 <strong className="text-slate-900">현업에 즉시 녹아들 수 있는 실무형 인재를 배출하는 것입니다.</strong><br />
@@ -101,37 +108,37 @@
                                     <LucideIcon name="shield-check" color={brandColor} size={32} />
                                 </div>
                                 <div className="break-keep">
-                                    <p className="text-slate-900 font-black text-lg mb-1 font-black">현장 DNA를 교육에 이식합니다</p>
+                                    <p className="text-slate-900 font-black text-lg mb-1">귀사의 현장 DNA를 교육에 이식합니다</p>
                                     <p className="text-slate-500 text-[15px] leading-relaxed">기업의 기술 요구사항을 분석하여, 실제 현업 과제를 수행하며 준비된 '동료'를 함께 기릅니다.</p>
                                 </div>
                             </div>
 
-                            <div className="mt-12 p-8 rounded-3xl bg-blue-600 text-white flex flex-col items-center justify-center cursor-pointer hover:bg-blue-700 transition-all shadow-xl active:scale-95 group font-black"
+                            <div className="mt-12 p-8 rounded-3xl bg-blue-600 text-white flex flex-col items-center justify-center cursor-pointer hover:bg-blue-700 transition-all shadow-xl active:scale-95 group"
                                  onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>
                                 <div className="flex items-center">
                                     <span className="font-black text-2xl tracking-tight mr-4">현장에서 원하는 인재상 제안하기 (1분)</span>
                                     <LucideIcon name="arrow-right" size={28} className="group-hover:translate-x-2 transition-transform" />
                                 </div>
-                                <p className="mt-2 text-blue-100 text-sm font-bold opacity-90">간단한 항목 체크만으로도 교육에 반영됩니다.</p>
+                                <p className="mt-2 text-blue-100 text-sm font-bold opacity-90">아래 문항 체크만으로 의견 전달이 완료됩니다.</p>
                             </div>
                         </div>
                     </div>
 
-                    {/* PAGE 2: BACK (신청 영역) */}
-                    <div className="w-full max-w-[850px] bg-white custom-shadow rounded-[2.5rem] overflow-hidden border-2 border-blue-500">
+                    {/* PAGE 2: BACK (신청 영역 - 상담/문의 추가 및 연락처 업데이트) */}
+                    <div className="w-full max-w-[850px] bg-white custom-shadow rounded-[2.5rem] overflow-hidden border-2 border-blue-500 font-black">
                         <div className="p-10 text-center bg-blue-50 border-b border-blue-100">
-                            <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase font-black font-black">그린아카데미와 협력하기</h2>
-                            <p className="text-blue-700 mt-2 font-bold text-lg italic underline decoration-blue-200 decoration-4 underline-offset-4 break-keep font-black">귀사에서 참여 가능한 항목을 체크해 주세요 (중복 가능)</p>
+                            <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">현장에서 원하는 인재상 제안하기</h2>
+                            <p className="text-blue-700 mt-2 font-bold text-lg italic underline decoration-blue-200 decoration-4 underline-offset-4 break-keep">참여 가능한 항목을 체크해 주세요 (중복 가능)</p>
                         </div>
 
-                        <div className="p-8 md:p-14">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10 font-black">
+                        <div className="p-8 md:p-14 font-black">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10 font-black">
                                 {Object.keys(checkedItems).map(key => (
-                                    <div key={key} onClick={() => toggleItem(key)} className={`p-6 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-5 ${checkedItems[key] ? 'border-blue-500 bg-blue-50 shadow-lg translate-y-[-2px]' : 'border-slate-50 bg-slate-50/50 hover:border-blue-200'}`}>
-                                        <div className={`p-2 rounded-xl ${checkedItems[key] ? 'bg-blue-600 text-white' : 'bg-white border-2 border-slate-100 text-slate-200'}`}>
-                                            <LucideIcon name="check" size={24} />
+                                    <div key={key} onClick={() => toggleItem(key)} className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-4 ${checkedItems[key] ? 'border-blue-500 bg-blue-50 shadow-lg translate-y-[-2px]' : 'border-slate-50 bg-slate-50/50 hover:border-blue-200'}`}>
+                                        <div className={`p-2 rounded-xl ${checkedItems[key] ? 'bg-blue-600 text-white shadow-inner' : 'bg-white border-2 border-slate-100 text-slate-200'}`}>
+                                            <LucideIcon name="check" size={20} />
                                         </div>
-                                        <h4 className={`font-black text-lg ${checkedItems[key] ? 'text-blue-600' : 'text-slate-800'}`}>{key}</h4>
+                                        <h4 className={`font-black text-[15px] ${checkedItems[key] ? 'text-blue-600' : 'text-slate-800'}`}>{key}</h4>
                                     </div>
                                 ))}
                             </div>
@@ -152,9 +159,20 @@
                                             <input type="text" name="contactNumber" placeholder="연락처" onChange={handleInputChange} className="w-full pl-16 pr-6 py-5 bg-white border-2 border-slate-100 rounded-2xl font-bold text-lg focus:outline-none focus:border-blue-500 transition-all shadow-sm font-black" />
                                         </div>
                                     </div>
-                                    <button onClick={handleSubmit} className="w-full mt-4 py-7 bg-blue-600 hover:bg-blue-700 text-white font-black text-2xl rounded-3xl shadow-xl flex items-center justify-center gap-4 transition-all active:scale-95 group font-black">
+                                    
+                                    <div className="relative group">
+                                        <textarea 
+                                            name="extraMessage" 
+                                            placeholder="기타 문의사항이나 구체적인 설명을 듣고 싶은 내용이 있다면 적어주세요." 
+                                            onChange={handleInputChange}
+                                            rows="3"
+                                            className="w-full px-6 py-5 bg-white border-2 border-slate-100 rounded-2xl font-bold text-lg focus:outline-none focus:border-blue-500 transition-all shadow-sm font-black resize-none"
+                                        ></textarea>
+                                    </div>
+
+                                    <button onClick={handleSubmit} className="w-full mt-4 py-7 bg-blue-600 hover:bg-blue-700 text-white font-black text-2xl rounded-3xl shadow-xl flex items-center justify-center gap-4 transition-all active:scale-95 group">
                                         <LucideIcon name="send" size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /> 
-                                        제안 완료하고 담당 실장님께 전달하기
+                                        의견 제출하고 상담 신청하기
                                     </button>
                                     <p className="mt-4 text-center text-slate-400 text-xs font-medium font-black">
                                         * 입력하신 정보는 파트너십 안내 목적으로만 안전하게 사용됩니다.
@@ -162,14 +180,17 @@
                                 </div>
                             </div>
 
-                            <div className="flex justify-between items-center border-t border-slate-100 pt-10 font-black">
-                                <div className="text-left font-black">
-                                    <p className="text-slate-900 font-black text-2xl italic tracking-tighter mb-1 font-black underline decoration-blue-200 decoration-4 underline-offset-4">green_job@nate.com</p>
-                                    <p className="text-slate-400 font-bold text-sm uppercase tracking-widest font-black">Gangnam Branch / 010-7547-9780</p>
+                            <div className="flex flex-col md:flex-row justify-between items-center border-t border-slate-100 pt-10 font-black gap-6">
+                                <div className="text-center md:text-left font-black">
+                                    <p className="text-slate-900 font-black text-2xl italic tracking-tighter mb-1 underline decoration-blue-200 decoration-4 underline-offset-4">green_job@nate.com</p>
+                                    {/* [수정] 요청하신 3개의 핸드폰 번호로 업데이트 */}
+                                    <p className="text-slate-400 font-bold text-sm uppercase tracking-widest break-keep">
+                                        취업지원실 / 010-7547-9780, 010-7548-9780, 010-7574-9780
+                                    </p>
                                 </div>
-                                <div className="text-right opacity-30 grayscale">
-                                    <img src={logoUrl} alt="로고" className="h-6 mb-1" />
-                                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest font-black">Green Academy</p>
+                                <div className="text-center md:text-right opacity-30 grayscale">
+                                    <img src={logoUrl} alt="로고" className="h-6 mb-1 mx-auto md:ml-auto md:mr-0" />
+                                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Green Academy</p>
                                 </div>
                             </div>
                         </div>
